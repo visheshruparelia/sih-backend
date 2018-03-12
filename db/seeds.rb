@@ -5,3 +5,14 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+n=5
+i=0
+while i<n do
+  print i
+  a=User.new
+  a.email='test'+i.to_s+'@gmail.com'
+  a.password=12345678
+  a.password_confirmation=12345678
+  a.save
+  i=i+1
+end
