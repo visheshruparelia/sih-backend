@@ -1,4 +1,4 @@
 class Allfile < ApplicationRecord
-  belongs_to :created_by
-  belongs_to :currentOwner
+  belongs_to :user, foreign_key: 'currentOwner_id'
+  belongs_to :user, foreign_key: 'created_by_id'
 end
