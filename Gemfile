@@ -7,7 +7,7 @@ end
 gem 'devise_token_auth'
 gem 'devise'
 gem 'omniauth'
-gem 'rqrcode'
+
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.5'

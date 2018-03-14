@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180314121343) do
+ActiveRecord::Schema.define(version: 20180314160007) do
 
   create_table "allfiles", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -22,7 +22,6 @@ ActiveRecord::Schema.define(version: 20180314121343) do
     t.binary "history"
     t.integer "created_by_id"
     t.integer "currentOwner_id"
-    t.string "qrcode"
     t.index ["created_by_id"], name: "index_allfiles_on_created_by_id"
     t.index ["currentOwner_id"], name: "index_allfiles_on_currentOwner_id"
   end
