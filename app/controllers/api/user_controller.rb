@@ -1,4 +1,4 @@
-class UserController < ApplicationController
+class Api::UserController < ApplicationController
     before_action :authenticate_user!
 
   def members_only

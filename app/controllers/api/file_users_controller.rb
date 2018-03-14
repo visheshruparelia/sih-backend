@@ -1,4 +1,4 @@
-class FileUsersController < ApplicationController
+class Api::FileUsersController < ApplicationController
   before_action :set_file_user, only: [:show, :update, :destroy]
 
   # GET /file_users

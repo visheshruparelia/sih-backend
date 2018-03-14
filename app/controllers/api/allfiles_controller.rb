@@ -1,4 +1,4 @@
-class AllfilesController < ApplicationController
+class Api::AllfilesController < ApplicationController
   before_action :set_allfile, only: [:show, :update, :destroy]
   before_action :authenticate_user!
   wrap_parameters format: [:json]
@@ -46,7 +46,11 @@ class AllfilesController < ApplicationController
 
   # PATCH/PUT /allfiles/1
   def update
-    if @allfile.update(allfile_params)
+    if @allfile.update(params[:name,:status,:customData,:view,:modify])
+      @userfile=FileUser.find(current_user.id)
+      @userfile.view=params[:view]
+      @userfile.modify=params[:modify]
+      @userfile.save
       render json: @allfile
     else
       render json: @allfile.errors, status: :unprocessable_entity
