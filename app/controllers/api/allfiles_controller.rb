@@ -38,7 +38,7 @@ class Api::AllfilesController < ApplicationController
       @userfile.view=params[:view]
       @userfile.save
 
-      render json: @allfile, status: :created, location: @allfile
+      render json: @allfile, status: :created
     else
       render json: @allfile.errors, status: :unprocessable_entity
     end
@@ -46,11 +46,15 @@ class Api::AllfilesController < ApplicationController
 
   # PATCH/PUT /allfiles/1
   def update
-    if @allfile.update(params[:name,:status,:customData,:view,:modify])
-      @userfile=FileUser.find(current_user.id)
-      @userfile.view=params[:view]
-      @userfile.modify=params[:modify]
-      @userfile.save
+
+    if @allfile.update(name: params[:name],status: params[:status],customData: params[:customData])
+      @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id)
+      if !params[:view].nil?
+          @userfile.update(view: params[:view])
+      end
+      if !params[:modify].nil?
+        @userfile.update(modify: params[:modify])
+      end
       render json: @allfile
     else
       render json: @allfile.errors, status: :unprocessable_entity
