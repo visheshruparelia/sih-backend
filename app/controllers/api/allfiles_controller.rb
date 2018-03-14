@@ -25,8 +25,9 @@ class Api::AllfilesController < ApplicationController
     @allfile.timeRecievedCurrentOwner=Time.now
     @allfile.customData=params[:customData]
     @allfile.history=[current_user.id]
-
-
+    qrcode = RQRCode::QRCode.new(@allfile.id.to_s)
+    svg = qrcode.as_svg(offset: 0, color: '000',  shape_rendering: 'crispEdges', module_size: 11)
+    @allfile.qrcode= svg
     # @allfile = Allfile.new(allfile_params)
 
     if @allfile.save
