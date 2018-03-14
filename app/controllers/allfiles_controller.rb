@@ -1,6 +1,7 @@
 class AllfilesController < ApplicationController
   before_action :set_allfile, only: [:show, :update, :destroy]
   before_action :authenticate_user!
+  wrap_parameters format: [:json]
 
   # GET /allfiles
   def index
@@ -21,6 +22,9 @@ class AllfilesController < ApplicationController
     @allfile.created_by_id=current_user.id
     @allfile.currentOwner_id=current_user.id
     @allfile.name=params[:name]
+    @allfile.timeRecievedCurrentOwner=Time.now
+    @allfile.customData=params[:customData]
+    @allfile.history=[current_user.id]
 
 
     # @allfile = Allfile.new(allfile_params)
