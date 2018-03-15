@@ -46,7 +46,7 @@ class Api::AllfilesController < ApplicationController
   def update
 
     if @allfile.update(name: params[:name],status: params[:status],customData: params[:customData])
-      @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id)
+      @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id).first
       if !params[:view].nil?
           @userfile.update(view: params[:view])
       end
@@ -61,7 +61,14 @@ class Api::AllfilesController < ApplicationController
 
   # DELETE /allfiles/1
   def destroy
-    @allfile.destroy
+      @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id).first
+      if @userfile.modify
+          @allfile.destroy
+      else
+          render json: {
+          error: "No access for usercheck the submitted email address",
+          },status: :unprocessable_entity
+      end
   end
 
   private
