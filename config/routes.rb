@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   namespace :api do
     resources :allfiles, path: :file
+    resources :groups
     get 'user/member', to: 'user#members_only'
 
   end

@@ -2,7 +2,6 @@ class Api::AllfilesController < ApplicationController
   before_action :set_allfile, only: [:show, :update, :destroy]
   before_action :authenticate_user!
   wrap_parameters format: [:json]
-
   # GET /allfiles
   def index
     @allfiles = Allfile.all
