@@ -9,5 +9,8 @@ class Ability
         if user.has_role? :admin
           can :read, Group
         end
+        if user.has_role? :employee
+          can :read, Group
+        end
   end
 end
