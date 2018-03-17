@@ -5,12 +5,15 @@ class Ability
         if user.has_role? :superadmin
           can :crud, Group
           can :addUsers, Group
+          can :search, Group
         end
         if user.has_role? :admin
           can :read, Group
+          can :search, Group
         end
         if user.has_role? :employee
           can :read, Group
+          can :search, Group
         end
   end
 end

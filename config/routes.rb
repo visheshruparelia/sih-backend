@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     post 'groups/addusers', to: 'groups#addUsers'
     post 'file/setgroups', to: 'allfiles#setPermissionsForUsers'
     post 'groups/setauthority', to: 'groupgroup#defineAuthority'
+    post 'groups/search', to: 'groups#search'
     get 'user/', to: 'user#index'
 
   end

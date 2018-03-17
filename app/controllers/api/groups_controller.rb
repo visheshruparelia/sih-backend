@@ -67,6 +67,12 @@ class Api::GroupsController < ApplicationController
     render json: {"Added":@added, "NotAdded":@notAdded},status:200
   end
 
+  def search
+    @query=params[:query]
+    @result=Group.where("name like ?","%#{@query}%")
+    render json: @result,status: 200
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_group
