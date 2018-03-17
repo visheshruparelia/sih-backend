@@ -31,8 +31,8 @@ class Api::AllfilesController < ApplicationController
 
       @userfile.fileId_id=@allfile.id
       @userfile.userId_id=current_user.id
-      @userfile.modify=params[:modify]
-      @userfile.view=params[:view]
+      @userfile.modify=true
+      @userfile.view=true
       @userfile.save
 
       render json: @allfile, status: :created
@@ -58,6 +58,22 @@ class Api::AllfilesController < ApplicationController
     end
   end
 
+  def setPermissionsForUsers
+    @users=Allfile.getUsers(params[:group_ids])
+    @fileId=Allfile.find(params[:file_id]).id
+    print '````````````````````````````````````````````'
+    print @users.to_a
+    print '````````````````````````````````````````````'
+    for user in @users
+      @userfile=FileUser.new()
+      @userfile.fileId_id=@fileId
+      @userfile.userId_id=user
+      @userfile.modify=params[:modify]
+      @userfile.view=params[:view]
+      @userfile.save
+    end
+  end
+
   # DELETE /allfiles/1
   def destroy
       @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id).first
@@ -65,7 +81,7 @@ class Api::AllfilesController < ApplicationController
           @allfile.destroy
       else
           render json: {
-          error: "No access for usercheck the submitted email address",
+          error: "Access denied",
           },status: :unprocessable_entity
       end
   end

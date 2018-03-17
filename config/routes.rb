@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     resources :allfiles, path: :file
     resources :groups
     post 'groups/addusers', to: 'groups#addUsers'
+    post 'file/setgroups', to: 'allfiles#setPermissionsForUsers'
     get 'user/', to: 'user#index'
 
   end

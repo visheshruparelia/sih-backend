@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180317075745) do
+ActiveRecord::Schema.define(version: 20180317124833) do
 
   create_table "allfiles", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 20180317075745) do
     t.binary "history"
     t.integer "created_by_id"
     t.integer "currentOwner_id"
+    t.integer "priority", default: 0
     t.index ["created_by_id"], name: "index_allfiles_on_created_by_id"
     t.index ["currentOwner_id"], name: "index_allfiles_on_currentOwner_id"
   end
