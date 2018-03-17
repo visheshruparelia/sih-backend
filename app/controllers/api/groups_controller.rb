@@ -49,14 +49,22 @@ class Api::GroupsController < ApplicationController
 
   def addUsers
     @users=params[:users]
+    @notAdded=[]
+    @added=[]
+    @dept=Group.find(params[:groupId][0]).isDepartment
     for user in @users
-      @usergroup = GroupUser.new()
-      @usergroup.group_id = params[:groupId][0]
-      @usergroup.user_id = user
-      @usergroup.defaultIncoming = params[:defaultIncoming]
-      @usergroup.save
+      if (Group.uniqueDepartment(user) and @dept) or (!@dept)
+        @usergroup = GroupUser.new()
+        @usergroup.group_id = params[:groupId][0]
+        @usergroup.user_id = user
+        @usergroup.defaultIncoming = params[:defaultIncoming]
+        @usergroup.save
+        @added.push(user)
+      else
+        @notAdded.push(user)
+      end
     end
-    render json: {"success":"Users added."},status:200
+    render json: {"Added":@added, "NotAdded":@notAdded},status:200
   end
 
   private
