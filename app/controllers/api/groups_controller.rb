@@ -20,12 +20,8 @@ class Api::GroupsController < ApplicationController
     @group = Group.new()
     @group.name = params[:name]
     @group.isDepartment = params[:isDepartment]
+
     if @group.save
-        @usergroup = GroupUser.new()
-        @usergroup.group_id = @group.id
-        @usergroup.user_id = current_user.id
-        @usergroup.defaultIncoming = params[:defaultIncoming]
-        @usergroup.save
       render json: @group, status: :created
     else
       render json: @group.errors, status: :unprocessable_entity
@@ -49,6 +45,18 @@ class Api::GroupsController < ApplicationController
   # DELETE /groups/1
   def destroy
     @group.destroy
+  end
+
+  def addUsers
+    @users=params[:users]
+    for user in @users
+      @usergroup = GroupUser.new()
+      @usergroup.group_id = params[:groupId][0]
+      @usergroup.user_id = user
+      @usergroup.defaultIncoming = params[:defaultIncoming]
+      @usergroup.save
+    end
+    render json: {"success":"Users added."},status:200
   end
 
   private
