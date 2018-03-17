@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     resources :groups
     post 'groups/addusers', to: 'groups#addUsers'
     post 'file/setgroups', to: 'allfiles#setPermissionsForUsers'
+    post 'groups/setauthority', to: 'groupgroup#defineAuthority'
     get 'user/', to: 'user#index'
 
   end

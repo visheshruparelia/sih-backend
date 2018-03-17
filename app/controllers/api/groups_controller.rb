@@ -51,11 +51,11 @@ class Api::GroupsController < ApplicationController
     @users=params[:users]
     @notAdded=[]
     @added=[]
-    @dept=Group.find(params[:groupId][0]).isDepartment
+    @dept=Group.find(params[:groupId]).isDepartment
     for user in @users
       if (Group.uniqueDepartment(user) and @dept) or (!@dept)
         @usergroup = GroupUser.new()
-        @usergroup.group_id = params[:groupId][0]
+        @usergroup.group_id = params[:groupId]
         @usergroup.user_id = user
         @usergroup.defaultIncoming = params[:defaultIncoming]
         @usergroup.save

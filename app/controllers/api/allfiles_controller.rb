@@ -61,9 +61,6 @@ class Api::AllfilesController < ApplicationController
   def setPermissionsForUsers
     @users=Allfile.getUsers(params[:group_ids])
     @fileId=Allfile.find(params[:file_id]).id
-    print '````````````````````````````````````````````'
-    print @users.to_a
-    print '````````````````````````````````````````````'
     for user in @users
       @userfile=FileUser.new()
       @userfile.fileId_id=@fileId
@@ -72,6 +69,7 @@ class Api::AllfilesController < ApplicationController
       @userfile.view=params[:view]
       @userfile.save
     end
+    render json: @users, status: 200
   end
 
   # DELETE /allfiles/1
