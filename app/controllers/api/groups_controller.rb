@@ -23,6 +23,7 @@ class Api::GroupsController < ApplicationController
         @usergroup = GroupUser.new()
         @usergroup.group_id = @group.id
         @usergroup.user_id = current_user.id
+        @usergroup.defaultIncoming = params[:defaultIncoming]
         @usergroup.save
       render json: @group, status: :created
     else
@@ -33,11 +34,15 @@ class Api::GroupsController < ApplicationController
 
   # PATCH/PUT /groups/1
   def update
-    if @group.update(group_params)
-      render json: @group
-    else
-      render json: @group.errors, status: :unprocessable_entity
-    end
+      if @group.update(name: params[:name],isDepartment: params[:isDepartment])
+        @usergroup=GroupUser.where(group_id: @group.id, user_id: current_user.id).first
+        if !params[:defaultIncoming].nil?
+            @usergroup.update(defaultIncoming: params[:defaultIncoming])
+        end
+        render json: @group
+      else
+        render json: @group.errors, status: :unprocessable_entity
+      end
   end
 
   # DELETE /groups/1
