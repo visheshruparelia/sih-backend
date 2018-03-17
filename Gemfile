@@ -8,6 +8,7 @@ gem 'devise_token_auth'
 gem 'devise'
 gem 'omniauth'
 gem 'cancancan', '~> 2.0'
+gem "rolify"
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'

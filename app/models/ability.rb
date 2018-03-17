@@ -2,8 +2,11 @@ class Ability
   include CanCan::Ability
       def initialize(user)
         alias_action :create, :read, :update, :destroy, to: :crud
-        if user.isAdmin?
+        if user.has_role? :superadmin
           can :crud, Group
+        end
+        if user.has_role? :admin
+          can :read, Group
         end
   end
 end

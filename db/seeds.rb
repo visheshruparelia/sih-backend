@@ -13,6 +13,12 @@ while i<n do
   a.email='test'+i.to_s+'@gmail.com'
   a.password=12345678
   a.password_confirmation=12345678
+  if i==4
+    a.add_role "superadmin"
+  end
+  if i==3
+    a.add_role "admin"
+  end
   a.save
   i=i+1
 end

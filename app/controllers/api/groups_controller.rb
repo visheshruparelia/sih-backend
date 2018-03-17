@@ -1,4 +1,5 @@
 class Api::GroupsController < ApplicationController
+  load_and_authorize_resource except: :create
   before_action :set_group, only: [:show, :update, :destroy]
   before_action :authenticate_user!
   wrap_parameters format: [:json]
@@ -58,6 +59,6 @@ class Api::GroupsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def group_params
-      params.fetch(:group, {})
+      params.require(:group)
     end
 end
