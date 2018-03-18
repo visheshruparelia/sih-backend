@@ -23,6 +23,7 @@ class Api::AllfilesController < ApplicationController
     @allfile.name=params[:name]
     @allfile.timeRecievedCurrentOwner=Time.now
     @allfile.customData=params[:customData]
+    @allfile.priority=params[:priority]
     @allfile.history=[current_user.id]
     # @allfile = Allfile.new(allfile_params)
 
@@ -44,7 +45,7 @@ class Api::AllfilesController < ApplicationController
   # PATCH/PUT /allfiles/1
   def update
 
-    if @allfile.update(name: params[:name],status: params[:status],customData: params[:customData])
+    if @allfile.update(name: params[:name],status: params[:status],customData: params[:customData],priority: params[:priority])
       @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id).first
       if !params[:view].nil?
           @userfile.update(view: params[:view])
