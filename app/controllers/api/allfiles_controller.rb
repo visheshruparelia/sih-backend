@@ -1,17 +1,27 @@
 class Api::AllfilesController < ApplicationController
-  before_action :set_allfile, only: [:show, :update, :destroy,:sendFile]
+  before_action :set_allfile, only: [:show, :update, :destroy]
   before_action :authenticate_user!
   wrap_parameters format: [:json]
   # GET /allfiles
   def index
-    @allfiles = Allfile.all
-
-    render json: @allfiles
+    @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id).first
+    if @userfile.view
+      @allfiles = Allfile.all
+      render json: @allfiles
+    else
+      render json: {"error":"You don't have view privileges"}, status:401
+    end
   end
 
   # GET /allfiles/1
   def show
-    render json: @allfile
+    @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id).first
+    if @userfile.view
+      @allfiles = Allfile.all
+      render json: @allfile
+    else
+      render json: {"error":"You don't have view privileges"}, status:401
+    end
   end
 
   # POST /allfiles
@@ -46,28 +56,33 @@ class Api::AllfilesController < ApplicationController
 
   # PATCH/PUT /allfiles/1
   def update
+    if params[:action]=='receive'
+      @allfile.history.push(current_user.id)
+      @allfile.status=0
+      @allfile.currentOwner_id=current_user.id
+      @allfile.timeRecievedCurrentOwner=Time.now
+      @allfile.updated_at=Time.now
+      @allfile.save
+      render json: @allfile, status:200
 
-    if @allfile.update(name: params[:name],status: params[:status],customData: params[:customData],priority: params[:priority])
+    if params[:action]=='transfer'
+      @allfile.status=1
+      @allfile.updated_at=Time.now
+      @allfile.save
+      render json: @allfile, status:200
+
+    if params[:action]=='update' #check modify/view access
       @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id).first
-      if !params[:view].nil?
-          @userfile.update(view: params[:view])
+      if(@userfile.modify)
+        if @allfile.update(name: params[:name],status: params[:status],customData: params[:customData],priority: params[:priority])
+          render json: @allfile
+        else
+          render json: @allfile.errors, status: :unprocessable_entity
+        end
+      else
+        render json: {"error":"You don't have modify privileges"}, status:401
       end
-      if !params[:modify].nil?
-        @userfile.update(modify: params[:modify])
-      end
-      render json: @allfile
-    else
-      render json: @allfile.errors, status: :unprocessable_entity
     end
-  end
-
-  def sendFile
-    @allfile.history.push(current_user.id)
-    @allfile.currentOwner_id=current_user.id
-    @allfile.timeRecievedCurrentOwner=Time.now
-    @allfile.updated_at=Time.now
-    @allfile.save
-    render json: @allfile
   end
 
   def setPermissionsForUsers
