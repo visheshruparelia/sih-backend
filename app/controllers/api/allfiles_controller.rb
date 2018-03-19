@@ -80,7 +80,7 @@ class Api::AllfilesController < ApplicationController
           @allfile.destroy
       else
           render json: {
-          error: "Access denied",
+          "error": "Access denied",
           },status: :unprocessable_entity
       end
   end

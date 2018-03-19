@@ -5,8 +5,12 @@ class Api::GroupsController < ApplicationController
   wrap_parameters format: [:json]
   # GET /groups
   def index
-    @groups = Group.all
-
+    @query=params[:name]
+    if !@query.nil?
+      @groups=Group.where("name like ?","%#{@query}%")
+    else
+      @groups = Group.all
+    end
     render json: @groups
   end
 
