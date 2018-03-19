@@ -1,5 +1,5 @@
 class Api::AllfilesController < ApplicationController
-  before_action :set_allfile, only: [:show, :update, :destroy]
+  before_action :set_allfile, only: [:show, :update, :destroy,:sendFile]
   before_action :authenticate_user!
   wrap_parameters format: [:json]
   # GET /allfiles
@@ -23,8 +23,10 @@ class Api::AllfilesController < ApplicationController
     @allfile.name=params[:name]
     @allfile.timeRecievedCurrentOwner=Time.now
     @allfile.customData=params[:customData]
-    @allfile.priority=params[:priority]
-    @allfile.history=[current_user.id]
+    if !params[:priority].nil?
+      @allfile.priority=params[:priority]
+    end
+    @allfile.history.push(current_user.id)
     # @allfile = Allfile.new(allfile_params)
 
     if @allfile.save
@@ -57,6 +59,15 @@ class Api::AllfilesController < ApplicationController
     else
       render json: @allfile.errors, status: :unprocessable_entity
     end
+  end
+
+  def sendFile
+    @allfile.history.push(current_user.id)
+    @allfile.currentOwner_id=current_user.id
+    @allfile.timeRecievedCurrentOwner=Time.now
+    @allfile.updated_at=Time.now
+    @allfile.save
+    render json: @allfile
   end
 
   def setPermissionsForUsers

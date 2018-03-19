@@ -6,6 +6,7 @@ class Allfile < ApplicationRecord
 
   enum status: [ :normal,:legalhold, :lost, :etc]
   enum priority: [ :low, :medium, :high]
+  serialize :history, Array
 
   def self.getUsers(groupIds)
     @users=[]
