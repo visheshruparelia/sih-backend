@@ -16,6 +16,5 @@ class Ability
           can :read, Group
           can :search, Group
         end
-
   end
 end

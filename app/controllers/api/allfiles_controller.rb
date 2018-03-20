@@ -68,9 +68,6 @@ class Api::AllfilesController < ApplicationController
 
   # PATCH/PUT /allfiles/1
   def update
-      print '```````````````````````'
-      print params[:cunt]
-      print '````````````````````````'
     if params[:cunt].eql?"receive"
       @allfile.currentOwner_id=current_user.id
       @allfile.timeRecievedCurrentOwner=Time.now
@@ -99,7 +96,7 @@ class Api::AllfilesController < ApplicationController
       @history.status_to = 1
       @history.changed_by_id= current_user.id
       @history.save
-      render json: @history.errors
+      render json: @allfile
     end
     if params[:cunt].eql?"update" #check modify/view access
       if FileUser.exists?(fileId_id: @allfile.id,userId_id: current_user.id)
