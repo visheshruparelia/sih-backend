@@ -4,24 +4,31 @@ class Api::AllfilesController < ApplicationController
   wrap_parameters format: [:json]
   # GET /allfiles
   def index
-    @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id).first
-    if @userfile.view
-      @allfiles = Allfile.all
-      render json: @allfiles
-    else
-      render json: {"error":"You don't have view privileges"}, status:401
+    @files = Allfile.all
+    @allfiles=[]
+    for file in @files
+      if FileUser.exists?(fileId_id: file.id,userId_id: current_user.id)
+        @userfile=FileUser.where(fileId_id: file.id, userId_id: current_user.id).first
+        if @userfile.view
+          @allfiles.push(file)
+        end
+      else
+        @allfiles.push(file)
+      end
     end
+    render json: @allfiles
   end
 
   # GET /allfiles/1
   def show
-    @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id).first
-    if @userfile.view
-      @allfiles = Allfile.all
-      render json: @allfile
-    else
-      render json: {"error":"You don't have view privileges"}, status:401
+    if FileUser.exists?(fileId_id: @allfile.id, userId_id: current_user.id)
+      @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id).first
+      if !@userfile.view
+        render json: {"error":"You don't have view privileges"}, status:401 and return
+      end
     end
+    render json: @allfile
+
   end
 
   # POST /allfiles
@@ -65,13 +72,13 @@ class Api::AllfilesController < ApplicationController
       @allfile.save
       render json: @allfile, status:200
 
-    if params[:action]=='transfer'
+    elsif params[:action]=='transfer'
       @allfile.status=1
       @allfile.updated_at=Time.now
       @allfile.save
       render json: @allfile, status:200
 
-    if params[:action]=='update' #check modify/view access
+    elsif params[:action]=='update' #check modify/view access
       @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id).first
       if(@userfile.modify)
         if @allfile.update(name: params[:name],status: params[:status],customData: params[:customData],priority: params[:priority])
@@ -86,17 +93,29 @@ class Api::AllfilesController < ApplicationController
   end
 
   def setPermissionsForUsers
-    @users=Allfile.getUsers(params[:group_ids])
     @fileId=Allfile.find(params[:file_id]).id
-    for user in @users
-      @userfile=FileUser.new()
-      @userfile.fileId_id=@fileId
-      @userfile.userId_id=user
-      @userfile.modify=params[:modify]
-      @userfile.view=params[:view]
-      @userfile.save
+    if FileUser.exists?(fileId_id: @fileId, userId_id: current_user.id)
+      @userfile=FileUser.where(fileId_id: @fileId, userId_id: current_user.id).first
+      if @userfile.modify
+        if !params[:group_ids].nil?
+          @users=Allfile.getUsers(params[:group_ids])
+        elsif !params[:user_ids].nil?
+          @users=params[:user_ids]
+        end
+        for user in @users
+          if user!=current_user.id
+            @userfile=FileUser.new()
+            @userfile.fileId_id=@fileId
+            @userfile.userId_id=user
+            @userfile.modify=params[:modify]
+            @userfile.view=params[:view]
+            @userfile.save
+          end
+        end
+        render json: @users, status: 200 and return
+      end
     end
-    render json: @users, status: 200
+      render json: {"error":"Access denied"},status: :unprocessable_entity
   end
 
   # DELETE /allfiles/1
