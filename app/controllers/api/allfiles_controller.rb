@@ -69,6 +69,8 @@ class Api::AllfilesController < ApplicationController
   # PATCH/PUT /allfiles/1
   def update
     if params[:cunt].eql?"receive"
+      @allfile.history.push(current_user.id)
+      @allfile.status=0
       @allfile.currentOwner_id=current_user.id
       @allfile.timeRecievedCurrentOwner=Time.now
       @allfile.updated_at=Time.now
@@ -85,9 +87,10 @@ class Api::AllfilesController < ApplicationController
       render json: @allfile, status:200
     end
     if params[:cunt].eql?"transfer"
+      @allfile.status=1
       @allfile.updated_at=Time.now
       @allfile.save
-      @allfile.status=1
+      
 
       @history = History.new()
       @history.file_id = @allfile.id
