@@ -46,6 +46,12 @@ while i<15 do
     a.currentOwner_id=1
     a.created_by_id=1
     a.save
+    userfile=FileUser.new()
+    userfile.fileId_id=i+1
+    userfile.userId_id=1
+    userfile.modify=true
+    userfile.view=true
+    userfile.save
   elsif i>=5 and i<10
     a=Allfile.new
     a.name="f"+(i+1).to_s
@@ -54,6 +60,12 @@ while i<15 do
     a.currentOwner_id=1
     a.created_by_id=1
     a.save
+    userfile=FileUser.new()
+    userfile.fileId_id=i+1
+    userfile.userId_id=1
+    userfile.modify=true
+    userfile.view=true
+    userfile.save
   else
     a=Allfile.new
     a.name="f"+(i+1).to_s
@@ -62,6 +74,12 @@ while i<15 do
     a.currentOwner_id=1
     a.created_by_id=1
     a.save
+    userfile=FileUser.new()
+    userfile.fileId_id=i+1
+    userfile.userId_id=1
+    userfile.modify=true
+    userfile.view=true
+    userfile.save
   end
   i=i+1
 end

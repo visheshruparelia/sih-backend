@@ -51,32 +51,6 @@ class Api::GroupsController < ApplicationController
     @group.destroy
   end
 
-  def addUsers
-    @users=params[:users]
-    @notAdded=[]
-    @added=[]
-    @dept=Group.find(params[:groupId]).isDepartment
-    for user in @users
-      if (Group.uniqueDepartment(user) and @dept) or (!@dept)
-        @usergroup = GroupUser.new()
-        @usergroup.group_id = params[:groupId]
-        @usergroup.user_id = user
-        @usergroup.defaultIncoming = params[:defaultIncoming]
-        @usergroup.save
-        @added.push(user)
-      else
-        @notAdded.push(user)
-      end
-    end
-    render json: {"Added":@added, "NotAdded":@notAdded},status:200
-  end
-
-  def search
-    @query=params[:query]
-    @result=Group.where("name like ?","%#{@query}%")
-    render json: @result,status: 200
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_group
