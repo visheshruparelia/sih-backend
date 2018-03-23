@@ -27,7 +27,13 @@ class Api::AllfilesController < ApplicationController
         render json: {"error":"You don't have view privileges"}, status:401 and return
       end
     end
-    render json: @allfile
+
+    @user=User.find(@allfile.created_by_id)
+
+    @file = JSON.parse(@allfile.to_json)
+    @file["created_by"] = @user
+    @file.to_json
+    render json: @file
 
   end
 
