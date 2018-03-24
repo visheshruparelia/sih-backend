@@ -10,10 +10,16 @@ class Api::AllfilesController < ApplicationController
       if FileUser.exists?(fileId_id: file.id,userId_id: current_user.id)
         @userfile=FileUser.where(fileId_id: file.id, userId_id: current_user.id).first
         if @userfile.view
-          @allfiles.push(file)
+          @file=JSON.parse(file.to_json)
+          @currentOwner=User.find(file.currentOwner_id)
+          @file["currentOwner"]={name: @currentOwner.name , id: @currentOwner.id}
+          @allfiles.push(@file)
         end
       else
-        @allfiles.push(file)
+        @file=JSON.parse(file.to_json)
+        @currentOwner=User.find(file.currentOwner_id)
+        @file["currentOwner"]={name: @currentOwner.name , id: @currentOwner.id}
+        @allfiles.push(@file)
       end
     end
     render json: @allfiles
