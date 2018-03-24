@@ -96,9 +96,6 @@ class Api::AllfilesController < ApplicationController
       @allfile.status=1
       @allfile.updated_at=Time.now
       if !params[:user_id].nil?
-          print "sadasdasdasdasdasdassadsdas"
-          print params[:user_id]
-          print "sadasdasdasdasdasdassadsdas"
           @allfile.currentOwner_id = params[:user_id]
       elsif !params[:group_id].nil? and !GroupUser.getDefaultincoming(params[:group_id]).nil?
           @allfile.currentOwner_id = GroupUser.getDefaultincoming(params[:group_id])
