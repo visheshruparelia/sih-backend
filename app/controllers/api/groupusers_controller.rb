@@ -21,5 +21,18 @@ class Api::GroupusersController < ApplicationController
     end
     render json: {"Added":@added, "NotAdded":@notAdded},status:200
   end
+  authorize! :create, @usergroup
 
+
+  def show
+    if checkAuthority(params[:id],current_user.id)
+      @rows=GroupUser.where(group_id: params[:id])
+      @users=[]
+      for row in @rows
+        @users.push(row.user_id)
+      end
+    else
+      render json: {"error":"Not allowed"}, status:403
+    end
+  end
 end
