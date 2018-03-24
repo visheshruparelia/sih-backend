@@ -9,4 +9,5 @@ class GroupUser < ApplicationRecord
           end
       end
       return nil
+  end
 end
