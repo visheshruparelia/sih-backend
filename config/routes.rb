@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     post 'groupgroup/', to: 'groupgroup#create'
     get 'user/', to: 'user#index'
     post 'groupuser/', to:'groupusers#create'
+    get 'file/:id/history', to: 'history#show'
 
   end
   mount_devise_token_auth_for 'User', at: 'api/auth'

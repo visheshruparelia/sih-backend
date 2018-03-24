@@ -33,7 +33,6 @@ class Api::AllfilesController < ApplicationController
 
   # POST /allfiles
   def create
-
     @allfile = Allfile.new()
     @allfile.created_by_id=current_user.id
     @allfile.currentOwner_id=current_user.id
@@ -47,8 +46,14 @@ class Api::AllfilesController < ApplicationController
     # @allfile = Allfile.new(allfile_params)
 
     if @allfile.save
-      @userfile=FileUser.new()
+      @history = History.new()
+      @history.file_id = @allfile.id
+      @history.change_time = Time.now
+      @history.status_from = 2
+      @history.status_to = 0
+      @history.save
 
+      @userfile=FileUser.new()
       @userfile.fileId_id=@allfile.id
       @userfile.userId_id=current_user.id
       @userfile.modify=true
@@ -63,34 +68,64 @@ class Api::AllfilesController < ApplicationController
 
   # PATCH/PUT /allfiles/1
   def update
-    if params[:action]=='receive'
+    if params[:cunt].eql?"receive"
       @allfile.history.push(current_user.id)
       @allfile.status=0
       @allfile.currentOwner_id=current_user.id
       @allfile.timeRecievedCurrentOwner=Time.now
       @allfile.updated_at=Time.now
       @allfile.save
-      render json: @allfile, status:200
 
-    elsif params[:action]=='transfer'
+      @history = History.new()
+      @history.file_id = @allfile.id
+      @history.change_time = Time.now
+      @history.status_from = 1
+      @history.status_to = 0
+      @history.changed_by_id= current_user.id
+      @history.save
+
+      render json: @allfile, status:200
+    end
+    if params[:cunt].eql?"transfer"
       @allfile.status=1
       @allfile.updated_at=Time.now
-      @allfile.save
-      render json: @allfile, status:200
-
-    elsif params[:action]=='update' #check modify/view access
-      @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id).first
-      if(@userfile.modify)
-        if @allfile.update(name: params[:name],status: params[:status],customData: params[:customData],priority: params[:priority])
-          render json: @allfile
-        else
-          render json: @allfile.errors, status: :unprocessable_entity
-        end
+      if !params[:user_id].nil?
+          print "sadasdasdasdasdasdassadsdas"
+          print params[:user_id]
+          print "sadasdasdasdasdasdassadsdas"
+          @allfile.currentOwner_id = params[:user_id]
+      elsif !params[:group_id].nil? and !GroupUser.getDefaultincoming(params[:group_id]).nil?
+          @allfile.currentOwner_id = GroupUser.getDefaultincoming(params[:group_id])
+      elsif GroupUser.getDefaultincoming(params[:group_id]).nil?
+          render json: {"error":"No defaultIncoming node"}, status:404
       else
-        render json: {"error":"You don't have modify privileges"}, status:401
+          render json: {"error":"Specify the User/group_id"}, status:404
+      end
+      @allfile.save
+
+
+      @history = History.new()
+      @history.file_id = @allfile.id
+      @history.change_time = Time.now
+      @history.status_from = 0
+      @history.status_to = 1
+      @history.changed_by_id= current_user.id
+      @history.save
+      render json: @allfile
+    end
+    if params[:cunt].eql?"update" #check modify/view access
+      if FileUser.exists?(fileId_id: @allfile.id,userId_id: current_user.id)
+          @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id).first
+          if(@userfile.modify)
+            if @allfile.update(name: params[:name],status: params[:status],customData: params[:customData],priority: params[:priority])
+              render json: @allfile and return
+            end
+          end
+      else
+        render json: {"error":"You don't have modify privsadafileges"}, status:401
       end
     end
-  end
+ end
 
   # DELETE /allfiles/1
   def destroy

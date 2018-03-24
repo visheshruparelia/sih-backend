@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180319131949) do
+ActiveRecord::Schema.define(version: 20180320161538) do
 
   create_table "allfiles", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -58,6 +58,18 @@ ActiveRecord::Schema.define(version: 20180319131949) do
     t.datetime "updated_at", null: false
     t.string "name"
     t.boolean "isDepartment"
+  end
+
+  create_table "histories", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "changed_by_id"
+    t.integer "file_id"
+    t.datetime "change_time"
+    t.integer "status_from"
+    t.integer "status_to"
+    t.index ["changed_by_id"], name: "index_histories_on_changed_by_id"
+    t.index ["file_id"], name: "index_histories_on_file_id"
   end
 
   create_table "roles", force: :cascade do |t|
