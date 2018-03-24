@@ -1,4 +1,8 @@
 class User < ApplicationRecord
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable,
+         :omniauthable
+  include DeviseTokenAuth::Concerns::User
   rolify
   after_create :assign_default_role
   def self.checkAuthorityOver(user_id , request_id)
@@ -12,6 +16,7 @@ class User < ApplicationRecord
                @authority.push(groupgroup.authorityOver_id)
              end
            end
+
         for g in authority
             @authority_over = GroupUser.where(group_id: g.id)
             for users in @authority_over
@@ -24,13 +29,9 @@ class User < ApplicationRecord
     end
 
   def assign_default_role
-    self.add_role(:employee) if self.roles.blank?
+      self.add_role(:employee) if self.roles.blank?
   end
-  # Include default devise modules.
-  devise :database_authenticatable, :registerable,
-          :recoverable, :rememberable, :trackable, :validatable,
-          :omniauthable
-  include DeviseTokenAuth::Concerns::User
+  # Include default devise modules
 
   def self.checkAuthority(groupId,userId)
     if GroupUser.exists?(user_id: userId, group_id: groupId)
@@ -47,5 +48,5 @@ class User < ApplicationRecord
       return false
     end
   end
-
+  end
 end

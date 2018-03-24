@@ -20,8 +20,8 @@ class Api::GroupusersController < ApplicationController
       end
     end
     render json: {"Added":@added, "NotAdded":@notAdded},status:200
+    authorize! :create, @usergroup
   end
-  authorize! :create, @usergroup
 
 
   def show
