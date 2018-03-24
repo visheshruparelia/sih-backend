@@ -10,4 +10,21 @@ class User < ApplicationRecord
           :recoverable, :rememberable, :trackable, :validatable,
           :omniauthable
   include DeviseTokenAuth::Concerns::User
+
+  def self.checkAuthority(groupId,userId)
+    if GroupUser.exists?(user_id: userId, group_id: groupId)
+      return true
+    else
+      @groups=GroupUser.where(user_id: userId)
+      for group in @groups
+        @groupgroups=GroupGroup.where(groupId_id: group.id)
+        for groupgroup in @groupgroups
+          if group_id==groupgroup.authorityOver_id
+            return true
+        end
+      end
+      return false
+    end
+  end
+
 end
