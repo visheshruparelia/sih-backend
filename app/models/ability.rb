@@ -7,6 +7,7 @@ class Ability
           can :addUsers, Group
           can :search, Group
           can :addUsers, Group
+          can :read, User
         end
         if user.has_role? :admin
           can :read, Group

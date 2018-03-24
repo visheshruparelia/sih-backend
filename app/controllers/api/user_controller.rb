@@ -1,4 +1,5 @@
 class Api::UserController < ApplicationController
+    load_and_authorize_resource
     before_action :authenticate_user!
   def index
       alluser = User.all
