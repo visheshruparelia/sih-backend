@@ -35,3 +35,51 @@ while i<3 do
   a.save
   i=i+1
 end
+
+i=0
+while i<15 do
+  if i<5
+    a=Allfile.new
+    a.name="f"+(i+1).to_s
+    a.priority="low"
+    a.timeRecievedCurrentOwner=Time.now
+    a.currentOwner_id=1
+    a.created_by_id=1
+    a.save
+    userfile=FileUser.new()
+    userfile.fileId_id=i+1
+    userfile.userId_id=1
+    userfile.modify=true
+    userfile.view=true
+    userfile.save
+  elsif i>=5 and i<10
+    a=Allfile.new
+    a.name="f"+(i+1).to_s
+    a.priority="medium"
+    a.timeRecievedCurrentOwner=Time.now
+    a.currentOwner_id=1
+    a.created_by_id=1
+    a.save
+    userfile=FileUser.new()
+    userfile.fileId_id=i+1
+    userfile.userId_id=1
+    userfile.modify=true
+    userfile.view=true
+    userfile.save
+  else
+    a=Allfile.new
+    a.name="f"+(i+1).to_s
+    a.priority="high"
+    a.timeRecievedCurrentOwner=Time.now
+    a.currentOwner_id=1
+    a.created_by_id=1
+    a.save
+    userfile=FileUser.new()
+    userfile.fileId_id=i+1
+    userfile.userId_id=1
+    userfile.modify=true
+    userfile.view=true
+    userfile.save
+  end
+  i=i+1
+end

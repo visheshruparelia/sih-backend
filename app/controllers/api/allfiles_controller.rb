@@ -127,32 +127,6 @@ class Api::AllfilesController < ApplicationController
     end
  end
 
-  def setPermissionsForUsers
-    @fileId=Allfile.find(params[:file_id]).id
-    if FileUser.exists?(fileId_id: @fileId, userId_id: current_user.id)
-      @userfile=FileUser.where(fileId_id: @fileId, userId_id: current_user.id).first
-      if @userfile.modify
-        if !params[:group_ids].nil?
-          @users=Allfile.getUsers(params[:group_ids])
-        elsif !params[:user_ids].nil?
-          @users=params[:user_ids]
-        end
-        for user in @users
-          if user!=current_user.id
-            @userfile=FileUser.new()
-            @userfile.fileId_id=@fileId
-            @userfile.userId_id=user
-            @userfile.modify=params[:modify]
-            @userfile.view=params[:view]
-            @userfile.save
-          end
-        end
-        render json: @users, status: 200 and return
-      end
-    end
-      render json: {"error":"Access denied"},status: :unprocessable_entity
-  end
-
   # DELETE /allfiles/1
   def destroy
       @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id).first

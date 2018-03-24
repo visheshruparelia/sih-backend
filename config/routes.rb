@@ -2,12 +2,10 @@ Rails.application.routes.draw do
   namespace :api do
     resources :allfiles, path: :file
     resources :groups
-    post 'groups/addusers', to: 'groups#addUsers'
-    post 'file/setpermissions', to: 'allfiles#setPermissionsForUsers'
-    post 'file/setgroups', to: 'allfiles#setPermissionsForUsers'
-    post 'groups/setauthority', to: 'groupgroup#defineAuthority'
-    post 'groups/search', to: 'groups#search'
+    post 'fileuser/', to: 'fileusers#create'
+    post 'groupgroup/', to: 'groupgroup#create'
     get 'user/', to: 'user#index'
+    post 'groupuser/', to:'groupusers#create'
     get 'file/:id/history', to: 'history#show'
 
   end
