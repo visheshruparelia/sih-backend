@@ -89,8 +89,20 @@ class Api::AllfilesController < ApplicationController
     if params[:cunt].eql?"transfer"
       @allfile.status=1
       @allfile.updated_at=Time.now
+      if !params[:user_id].nil?
+          print "sadasdasdasdasdasdassadsdas"
+          print params[:user_id]
+          print "sadasdasdasdasdasdassadsdas"
+          @allfile.currentOwner_id = params[:user_id]
+      elsif !params[:group_id].nil? and !GroupUser.getDefaultincoming(params[:group_id]).nil?
+          @allfile.currentOwner_id = GroupUser.getDefaultincoming(params[:group_id])
+      elsif GroupUser.getDefaultincoming(params[:group_id]).nil?
+          render json: {"error":"No defaultIncoming node"}, status:404
+      else
+          render json: {"error":"Specify the User/group_id"}, status:404
+      end
       @allfile.save
-      
+
 
       @history = History.new()
       @history.file_id = @allfile.id
