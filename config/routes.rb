@@ -8,7 +8,7 @@ Rails.application.routes.draw do
     post 'groupuser/', to:'groupusers#create'
     get 'file/:id/history', to: 'history#show'
 
-    mount_devise_token_auth_for 'User', at: 'auth', controllers: { sessions: "overrides/sessions" }
   end
+  mount_devise_token_auth_for 'User', at: 'api/auth', controllers: { sessions: "overrides/sessions" }
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
