@@ -10,10 +10,16 @@ class Api::AllfilesController < ApplicationController
       if FileUser.exists?(fileId_id: file.id,userId_id: current_user.id)
         @userfile=FileUser.where(fileId_id: file.id, userId_id: current_user.id).first
         if @userfile.view
-          @allfiles.push(file)
+          @file=JSON.parse(file.to_json)
+          @currentOwner=User.find(file.currentOwner_id)
+          @file["currentOwner"]={name: @currentOwner.name , id: @currentOwner.id}
+          @allfiles.push(@file)
         end
       else
-        @allfiles.push(file)
+        @file=JSON.parse(file.to_json)
+        @currentOwner=User.find(file.currentOwner_id)
+        @file["currentOwner"]={name: @currentOwner.name , id: @currentOwner.id}
+        @allfiles.push(@file)
       end
     end
     render json: @allfiles
@@ -28,10 +34,11 @@ class Api::AllfilesController < ApplicationController
       end
     end
 
-    @user=User.find(@allfile.created_by_id)
-
     @file = JSON.parse(@allfile.to_json)
-    @file["created_by"] = @user
+    @currentOwner=User.find(@allfile.currentOwner_id)
+    @createdBy=User.find(@allfile.created_by_id)
+    @file["currentOwner"]={ name: @currentOwner.name , id: @currentOwner.id}
+    @file["createdBy"]={ name: @createdBy.name , id: @createdBy.id}
     @file.to_json
     render json: @file
 
@@ -75,22 +82,26 @@ class Api::AllfilesController < ApplicationController
   # PATCH/PUT /allfiles/1
   def update
     if params[:cunt].eql?"receive"
-      @allfile.history.push(current_user.id)
-      @allfile.status=0
-      @allfile.currentOwner_id=current_user.id
-      @allfile.timeRecievedCurrentOwner=Time.now
-      @allfile.updated_at=Time.now
-      @allfile.save
+      if current_user.id==@allfile.currentOwner_id
+        @allfile.history.push(current_user.id)
+        @allfile.status=0
+        @allfile.currentOwner_id=current_user.id
+        @allfile.timeRecievedCurrentOwner=Time.now
+        @allfile.updated_at=Time.now
+        @allfile.save
 
-      @history = History.new()
-      @history.file_id = @allfile.id
-      @history.change_time = Time.now
-      @history.status_from = 1
-      @history.status_to = 0
-      @history.changed_by_id= current_user.id
-      @history.save
+        @history = History.new()
+        @history.file_id = @allfile.id
+        @history.change_time = Time.now
+        @history.status_from = 1
+        @history.status_to = 0
+        @history.changed_by_id= current_user.id
+        @history.save
 
-      render json: @allfile, status:200
+        render json: @allfile, status:200
+      else
+        render json: {"error":"File hasn't been transferred to you"}, status: 403
+      end
     end
     if params[:cunt].eql?"transfer"
       @allfile.status=1

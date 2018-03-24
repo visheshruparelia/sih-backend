@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     get 'user/', to: 'user#index'
     post 'groupuser/', to:'groupusers#create'
     get 'file/:id/history', to: 'history#show'
+    get 'groups/:id/users', to: 'groupusers#show'
 
   end
   mount_devise_token_auth_for 'User', at: 'api/auth', controllers: { sessions: "overrides/sessions" }
