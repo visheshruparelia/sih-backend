@@ -82,7 +82,7 @@ class Api::AllfilesController < ApplicationController
 
   # PATCH/PUT /allfiles/1
   def update
-    if params[:cunt].eql?"receive"
+    if params[:mode].eql?"receive"
       if current_user.id==@allfile.currentOwner_id
         @allfile.history.push(current_user.id)
         @allfile.status=0
@@ -104,7 +104,7 @@ class Api::AllfilesController < ApplicationController
         render json: {"error":"File hasn't been transferred to you"}, status: 403
       end
     end
-    if params[:cunt].eql?"transfer"
+    if params[:mode].eql?"transfer"
       @allfile.status=1
       @allfile.updated_at=Time.now
       if !params[:user_id].nil?
@@ -128,7 +128,7 @@ class Api::AllfilesController < ApplicationController
       @history.save
       render json: @allfile
     end
-    if params[:cunt].eql?"update" #check modify/view access
+    if params[:mode].eql?"update" #check modify/view access
       if FileUser.exists?(fileId_id: @allfile.id,userId_id: current_user.id)
           @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id).first
           if(@userfile.modify)
