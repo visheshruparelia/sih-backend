@@ -49,5 +49,7 @@ class Api::UserController < ApplicationController
     a.password=@password
     a.password_confirmation=@password_confirmation
     a.save
+
+    render json: a, status: 201
   end
 end
