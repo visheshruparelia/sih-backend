@@ -153,7 +153,6 @@ class Api::AllfilesController < ApplicationController
           },status: :unprocessable_entity
       end
   end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_allfile

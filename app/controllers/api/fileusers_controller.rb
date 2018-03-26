@@ -11,7 +11,13 @@ class Api::FileusersController < ApplicationController
 
   # GET /file_users/1
   def show
-    render json: @file_user
+      if User.checkAuthorityOver(current_user.id,params[:id])
+          @files=Allfile.where(currentOwner_id: params[:id])
+          render json: @files,status: 200
+
+      else
+          render json: {"error":"Not authorized"}, status: 403
+      end
   end
 
   # POST /file_users
