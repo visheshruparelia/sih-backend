@@ -1,5 +1,4 @@
 class Api::UserController < ApplicationController
-  load_and_authorize_resource
   before_action :authenticate_user!
 
   def index
@@ -51,5 +50,6 @@ class Api::UserController < ApplicationController
     a.save
 
     render json: a, status: 201
+    authorize! :make, a
   end
 end
