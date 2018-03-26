@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     get 'file/:id/history', to: 'history#show'
     get 'groups/:id/users', to: 'groupusers#show'
     get 'users/:id/files', to: 'fileusers#show'
+    get 'users/:id/groups', to: 'groupusers#showgroups'
   end
   mount_devise_token_auth_for 'User', at: 'api/auth'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

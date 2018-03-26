@@ -23,6 +23,21 @@ class Api::GroupusersController < ApplicationController
     authorize! :create, @usergroup
   end
 
+  def showgroups
+      if User.checkAuthorityOver(current_user.id,params[:id])
+          @groups=GroupUser.where(user_id: params[:id])
+          @g=[]
+          for group in @groups
+              @temp=Group.find(group.group_id)
+              if !@temp.isDepartment
+                  @g.push(@temp)
+              end
+          end
+          render json: @g, status: 200
+      else
+          render json: {"error":"Not allowed"}, status:403
+      end
+  end
 
   def show
     if checkAuthority(params[:id],current_user.id)
