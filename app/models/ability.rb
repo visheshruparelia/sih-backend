@@ -6,7 +6,6 @@ class Ability
           can :crud, Group
           can :search, Group
           can :create, GroupUser
-          can :read, User
         end
         if user.has_role? :admin
           can :read, Group
