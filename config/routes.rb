@@ -12,7 +12,8 @@ Rails.application.routes.draw do
     get 'users/:id/groups', to: 'groupusers#showgroups'
     post 'users/create', to: 'user#make'
     get 'users/:id', to: 'user#show'
-    get 'user/:id/report', to: 'report#create'
+    get 'users/:id/report', to: 'report#create'
+    get 'users/:id/authorityover', to: 'groupgroup#authorityover'
   end
   mount_devise_token_auth_for 'User', at: 'api/auth'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

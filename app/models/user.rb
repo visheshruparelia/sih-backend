@@ -7,7 +7,7 @@ class User < ApplicationRecord
         @groups=[]
         @authority_over = []
         @authority=[]
-           @groups=GroupUser.where(user_id: current_user.id)
+           @groups=GroupUser.where(user_id: user_id)
            for group in @groups
              @groupgroups=GroupGroup.where(groupId_id: group.id)
              for groupgroup in @groupgroups
@@ -15,7 +15,7 @@ class User < ApplicationRecord
              end
            end
 
-        for g in authority
+        for g in @authority
             @authority_over = GroupUser.where(group_id: g.id)
             for users in @authority_over
                 if(request_id == users.id)

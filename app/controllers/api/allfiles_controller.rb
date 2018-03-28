@@ -131,8 +131,18 @@ class Api::AllfilesController < ApplicationController
     if params[:mode].eql?"update" #check modify/view access
       if FileUser.exists?(fileId_id: @allfile.id,userId_id: current_user.id)
           @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id).first
+          @currstatus=@userfile.status
           if(@userfile.modify)
             if @allfile.update(name: params[:name],status: params[:status],customData: params[:customData],priority: params[:priority])
+                if @currstatus!=params[:status]
+                    @history = History.new()
+                    @history.file_id = @allfile.id
+                    @history.change_time = Time.now
+                    @history.status_from =@currstatus
+                    @history.status_to = params[:status]
+                    @history.changed_by_id= current_user.id
+                    @history.save
+                end
               render json: @allfile and return
             end
           end
