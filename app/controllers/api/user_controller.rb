@@ -20,20 +20,19 @@ class Api::UserController < ApplicationController
   end
 
   def show
-    if(User.checkAuthorityOver(current_user.id , params[:id]))
-        @groupuser = GroupUser.where(user_id: params[:id])
-        user = current_user
-        @role = user.roles.first.name
-        user = JSON.parse(user.to_json)
-        for g in @groupuser
-            group = Group.find(g.group_id)
+    @groupuser = GroupUser.where(user_id: params[:id])
+    user = current_user
+    @role = user.roles.first.name
+    user = JSON.parse(user.to_json)
+    for g in @groupuser
+        group = Group.find(g.group_id)
+            print "sadlaskjdas"
             if group.isDepartment
                 user["department"] = group.name
-            end
         end
-        user["role"]= @role
-        render json: user
     end
+    user["role"]= @role
+    render json: user
   end
 
   # MAKE USERS IN ADMIN PANEL
