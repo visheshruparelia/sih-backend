@@ -45,7 +45,7 @@ class Api::GroupusersController < ApplicationController
     if User.checkAuthority(request_id,current_user.id)
       @rows=GroupUser.where(group_id: request_id)
       @users=[]
-      for row in @rows
+      @rows.each do |row|
         @users.push(row.user_id)
       end
     else
