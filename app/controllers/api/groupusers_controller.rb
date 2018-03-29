@@ -48,6 +48,7 @@ class Api::GroupusersController < ApplicationController
       @rows.each do |row|
         @users.push(row.user_id)
       end
+      render json: @users
     else
       render json: {"error":"Not allowed"}, status:403
     end
