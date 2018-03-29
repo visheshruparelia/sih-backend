@@ -24,8 +24,9 @@ class Api::GroupusersController < ApplicationController
   end
 
   def showgroups
-      if User.checkAuthorityOver(current_user.id,params[:id])
-          @groups=GroupUser.where(user_id: params[:id])
+    request_id=params[:id].to_i
+      if User.checkAuthorityOver(current_user.id,request_id)
+          @groups=GroupUser.where(user_id: request_id)
           @g=[]
           for group in @groups
               @temp=Group.find(group.group_id)
@@ -40,8 +41,9 @@ class Api::GroupusersController < ApplicationController
   end
 
   def show
-    if checkAuthority(params[:id],current_user.id)
-      @rows=GroupUser.where(group_id: params[:id])
+    request_id=params[:id].to_i
+    if User.checkAuthority(request_id,current_user.id)
+      @rows=GroupUser.where(group_id: request_id)
       @users=[]
       for row in @rows
         @users.push(row.user_id)
