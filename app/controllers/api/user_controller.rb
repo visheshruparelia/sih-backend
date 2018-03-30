@@ -26,7 +26,6 @@ class Api::UserController < ApplicationController
     user = JSON.parse(user.to_json)
     for g in @groupuser
         group = Group.find(g.group_id)
-            print "sadlaskjdas"
             if group.isDepartment
                 user["department"] = group.name
         end

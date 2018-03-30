@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180320161538) do
+ActiveRecord::Schema.define(version: 20180330200218) do
 
   create_table "allfiles", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -57,7 +57,7 @@ ActiveRecord::Schema.define(version: 20180320161538) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
-    t.boolean "isDepartment"
+    t.boolean "isDepartment", default: false
   end
 
   create_table "histories", force: :cascade do |t|
