@@ -27,9 +27,9 @@ class Api::GroupgroupController < ApplicationController
      @groupgroups=GroupGroup.where(groupId_id: group.group_id)
      @groupgroups.each do |groupgroup|
       #  print '````````````````````````````'
-      #  print groupgroup.authorityOver_id
+       @temp=Group.find(groupgroup.authorityOver_id)
       #  print '````````````````````````````'
-       @authority.push(groupgroup)
+       @authority.push(@temp)
      end
     end
    render json: @authority.to_set,status: 200
