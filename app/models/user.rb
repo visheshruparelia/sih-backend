@@ -42,7 +42,7 @@ class User < ApplicationRecord
       for group in @groups
         @groupgroups=GroupGroup.where(groupId_id: group.id)
         for groupgroup in @groupgroups
-          if group_id==groupgroup.authorityOver_id
+          if groupId==groupgroup.authorityOver_id
             return true
         end
       end

@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     get 'users/:id/authorityover', to: 'groupgroup#authorityover'
     get 'file/lastuser/:id', to: 'history#lastuser'
     get 'groupuser/', to:'groupusers#index'
+    get 'leaderboard/:id', to: 'leaderboard#show'
   end
   mount_devise_token_auth_for 'User', at: 'api/auth'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
