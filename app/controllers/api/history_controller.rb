@@ -1,15 +1,9 @@
-class Api::HistoryController < ApplicationController
+  class Api::HistoryController < ApplicationController
     before_action :set_history, only: [:show,:lastuser]
     before_action :authenticate_user!
 
     # GET /file/1/history
     def show
-      if FileUser.exists?(fileId_id: params[:id], userId_id: current_user.id)
-        @userfile=FileUser.where(fileId_id: params[:id], userId_id: current_user.id).first
-        if !@userfile.view
-          render json: {"error":"You don't have view privileges"}, status:401 and return
-        end
-      end
 
       @filehistory=[]
       for history in @histories
