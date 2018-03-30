@@ -27,7 +27,7 @@ class Api::GroupgroupController < ApplicationController
       #  print '````````````````````````````'
       #  print groupgroup.authorityOver_id
       #  print '````````````````````````````'
-       @authority.push(groupgroup.authorityOver_id)
+       @authority.push(groupgroup)
      end
     end
    render json: @authority.to_set,status: 200
