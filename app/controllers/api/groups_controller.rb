@@ -9,11 +9,11 @@ class Api::GroupsController < ApplicationController
     if !@query.nil?
       @groups=Group.where("name like ?","%#{@query}%")
     else
-      @groups = Group.all
+      @groups = Group.where(isDepartment: true)
     end
     render json: @groups
   end
-
+  +
   # GET /groups/1
   def show
     render json: @group

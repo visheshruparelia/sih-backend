@@ -44,10 +44,10 @@ class User < ApplicationRecord
         for groupgroup in @groupgroups
           if groupId==groupgroup.authorityOver_id
             return true
+          end
         end
       end
       return false
     end
-  end
   end
 end
