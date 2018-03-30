@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
   namespace :api do
     resources :allfiles, path: :file
+    resources :departments
     resources :groups
-    # post 'fileuser/', to: 'fileusers#create'
+      # post 'fileuser/', to: 'fileusers#create'
     post 'groupgroup/', to: 'groupgroup#create'
     get 'users/', to: 'user#index'
     post 'groupuser/', to:'groupusers#create'

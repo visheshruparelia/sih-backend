@@ -35,6 +35,7 @@ class Api::AllfilesController < ApplicationController
     @allfile.created_by_id=current_user.id
     @allfile.currentOwner_id=current_user.id
     @allfile.name=params[:name]
+    @allfile.fileId=params[:fileId]
     @allfile.timeRecievedCurrentOwner=Time.now
     @allfile.customData=params[:customData]
     if !params[:priority].nil?
@@ -114,7 +115,7 @@ class Api::AllfilesController < ApplicationController
     end
     if params[:mode].eql?"update" #check modify/view access
           @currstatus=@allfile.status
-          if @allfile.update(name: params[:name],status: params[:status],customData: params[:customData],priority: params[:priority])
+          if @allfile.update(fileId: params[:fileId],name: params[:name],status: params[:status],customData: params[:customData],priority: params[:priority])
               if @currstatus!=params[:status]
                   @history = History.new()
                   @history.file_id = @allfile.id
