@@ -17,17 +17,20 @@ class Api::GroupgroupController < ApplicationController
   end
 
   def authorityover
-      @groups=[]
-      @authority_over = []
-      @authority=[]
-         @groups=GroupUser.where(user_id: params[:id])
-     for group in @groups
-       @groupgroups=GroupGroup.where(groupId_id: group.id)
-       for groupgroup in @groupgroups
-         @authority.push(groupgroup.authorityOver_id)
-       end
+    @groups=[]
+    @authority_over = []
+    @authority=[]
+    @groups=GroupUser.where(user_id: params[:id])
+    @groups.each do |group|
+     @groupgroups=GroupGroup.where(groupId_id: group.group_id)
+     @groupgroups.each do |groupgroup|
+      #  print '````````````````````````````'
+      #  print groupgroup.authorityOver_id
+      #  print '````````````````````````````'
+       @authority.push(groupgroup.authorityOver_id)
+     end
     end
-    render json: @authority.to_set,status: 200
+   render json: @authority.to_set,status: 200
   end
 
 end

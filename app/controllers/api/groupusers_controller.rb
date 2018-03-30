@@ -2,6 +2,11 @@ class Api::GroupusersController < ApplicationController
   before_action :authenticate_user!
   wrap_parameters format: [:json]
 
+  def index
+    @groups=GroupUser.all
+    render json: @groups, status: 200
+  end
+  
   def create
     @users=params[:users]
     @notAdded=[]
