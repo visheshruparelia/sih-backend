@@ -23,6 +23,7 @@ class Api::GroupsController < ApplicationController
   def create
     @group = Group.new()
     @group.name = params[:name]
+    @group.isDepartment = params[:isDepartment]
     if @group.save
       render json: @group, status: :created
     else
@@ -33,7 +34,7 @@ class Api::GroupsController < ApplicationController
 
   # PATCH/PUT /groups/1
   def update
-      if @group.update(name: params[:name])
+      if @group.update(name: params[:name],isDepartment: params[:isDepartment])
         @usergroup=GroupUser.where(group_id: @group.id, user_id: current_user.id).first
         if !params[:defaultIncoming].nil?
             @usergroup.update(defaultIncoming: params[:defaultIncoming])
