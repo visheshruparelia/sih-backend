@@ -37,7 +37,7 @@ while i<3 do
   a=Group.new
   a.name="Section"+(i+1).to_s
   if i==0 or i==2
-    a.isDepartment="true"
+    a.isDepartment="false"
   else
     a.isDepartment="false"
   end

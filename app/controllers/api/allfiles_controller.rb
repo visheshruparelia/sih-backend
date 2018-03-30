@@ -7,32 +7,16 @@ class Api::AllfilesController < ApplicationController
     @files = Allfile.all
     @allfiles=[]
     for file in @files
-      if FileUser.exists?(fileId_id: file.id,userId_id: current_user.id)
-        @userfile=FileUser.where(fileId_id: file.id, userId_id: current_user.id).first
-        if @userfile.view
-          @file=JSON.parse(file.to_json)
-          @currentOwner=User.find(file.currentOwner_id)
-          @file["currentOwner"]={name: @currentOwner.name , id: @currentOwner.id}
-          @allfiles.push(@file)
-        end
-      else
-        @file=JSON.parse(file.to_json)
-        @currentOwner=User.find(file.currentOwner_id)
-        @file["currentOwner"]={name: @currentOwner.name , id: @currentOwner.id}
-        @allfiles.push(@file)
-      end
+      @file=JSON.parse(file.to_json)
+      @currentOwner=User.find(file.currentOwner_id)
+      @file["currentOwner"]={name: @currentOwner.name , id: @currentOwner.id}
+      @allfiles.push(@file)
     end
     render json: @allfiles
   end
 
   # GET /allfiles/1
   def show
-    if FileUser.exists?(fileId_id: @allfile.id, userId_id: current_user.id)
-      @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id).first
-      if !@userfile.view
-        render json: {"error":"You don't have view privileges"}, status:401 and return
-      end
-    end
 
     @file = JSON.parse(@allfile.to_json)
     @currentOwner=User.find(@allfile.currentOwner_id)
@@ -51,6 +35,7 @@ class Api::AllfilesController < ApplicationController
     @allfile.created_by_id=current_user.id
     @allfile.currentOwner_id=current_user.id
     @allfile.name=params[:name]
+    @allfile.fileId=params[:fileId]
     @allfile.timeRecievedCurrentOwner=Time.now
     @allfile.customData=params[:customData]
     if !params[:priority].nil?
@@ -129,25 +114,19 @@ class Api::AllfilesController < ApplicationController
       render json: @allfile
     end
     if params[:mode].eql?"update" #check modify/view access
-      if FileUser.exists?(fileId_id: @allfile.id,userId_id: current_user.id)
-          @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id).first
-          @currstatus=Allfile.find(@userfile.fileId_id).status
-          if @userfile.modify or true
-            if @allfile.update(name: params[:name],status: params[:status],customData: params[:customData],priority: params[:priority])
-                if @currstatus!=params[:status]
-                    @history = History.new()
-                    @history.file_id = @allfile.id
-                    @history.change_time = Time.now
-                    @history.status_from =@currstatus
-                    @history.status_to = params[:status]
-                    @history.changed_by_id= current_user.id
-                    @history.save
-                end
-              render json: @allfile and return
-            end
+
+      @currstatus=@allfile.status
+      if @allfile.update(fileId: params[:fileId],name: params[:name],status: params[:status],customData: params[:customData],priority: params[:priority])
+          if @currstatus!=params[:status]
+              @history = History.new()
+              @history.file_id = @allfile.id
+              @history.change_time = Time.now
+              @history.status_from =@currstatus
+              @history.status_to = params[:status]
+              @history.changed_by_id= current_user.id
+              @history.save
           end
-      else
-        render json: {"error":"You don't have modify privsadafileges"}, status:403
+        render json: @allfile and return
       end
     end
  end
@@ -155,7 +134,7 @@ class Api::AllfilesController < ApplicationController
   # DELETE /allfiles/1
   def destroy
       @userfile=FileUser.where(fileId_id: @allfile.id, userId_id: current_user.id).first
-      if @userfile.modify
+      if @userfile.modify || true
           @allfile.destroy
       else
           render json: {

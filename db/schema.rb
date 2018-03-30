@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180320161538) do
+ActiveRecord::Schema.define(version: 20180330203726) do
 
   create_table "allfiles", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -23,8 +23,16 @@ ActiveRecord::Schema.define(version: 20180320161538) do
     t.integer "created_by_id"
     t.integer "currentOwner_id"
     t.integer "priority", default: 0
+    t.integer "fileId", default: 0, null: false
     t.index ["created_by_id"], name: "index_allfiles_on_created_by_id"
     t.index ["currentOwner_id"], name: "index_allfiles_on_currentOwner_id"
+  end
+
+  create_table "departments", force: :cascade do |t|
+    t.string "name"
+    t.integer "head_id"
+    t.integer "deptId", default: 0, null: false
+    t.index ["head_id"], name: "index_departments_on_head_id"
   end
 
   create_table "file_users", force: :cascade do |t|
@@ -57,7 +65,7 @@ ActiveRecord::Schema.define(version: 20180320161538) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
-    t.boolean "isDepartment"
+    t.boolean "isDepartment", default: false
   end
 
   create_table "histories", force: :cascade do |t|
