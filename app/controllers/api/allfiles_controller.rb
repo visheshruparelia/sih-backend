@@ -114,19 +114,20 @@ class Api::AllfilesController < ApplicationController
       render json: @allfile
     end
     if params[:mode].eql?"update" #check modify/view access
-          @currstatus=@allfile.status
-          if @allfile.update(fileId: params[:fileId],name: params[:name],status: params[:status],customData: params[:customData],priority: params[:priority])
-              if @currstatus!=params[:status]
-                  @history = History.new()
-                  @history.file_id = @allfile.id
-                  @history.change_time = Time.now
-                  @history.status_from =@currstatus
-                  @history.status_to = params[:status]
-                  @history.changed_by_id= current_user.id
-                  @history.save
-              end
-            render json: @allfile and return
+
+      @currstatus=@allfile.status
+      if @allfile.update(fileId: params[:fileId],name: params[:name],status: params[:status],customData: params[:customData],priority: params[:priority])
+          if @currstatus!=params[:status]
+              @history = History.new()
+              @history.file_id = @allfile.id
+              @history.change_time = Time.now
+              @history.status_from =@currstatus
+              @history.status_to = params[:status]
+              @history.changed_by_id= current_user.id
+              @history.save
           end
+        render json: @allfile and return
+      end
     end
  end
 
