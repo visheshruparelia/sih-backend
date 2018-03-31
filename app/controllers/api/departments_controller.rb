@@ -46,6 +46,6 @@ class Api::DepartmentsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def department_params
-      params.require(:department).permit(:name, :head_id, :deptId)
+      params.require(:department)
     end
 end
