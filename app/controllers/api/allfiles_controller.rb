@@ -65,6 +65,7 @@ class Api::AllfilesController < ApplicationController
             @history.change_time = Time.now
             @history.status_from = 1
             @history.status_to = 0
+            @allfile.currentOwner_id=current_user.id
             @history.changed_by_id= current_user.id
             @history.nextNode=params[:nextNode]
             @history.save
@@ -74,6 +75,7 @@ class Api::AllfilesController < ApplicationController
             @history = History.new()
             @history.file_id = @allfile.id
             @history.change_time = Time.now
+            @allfile.currentOwner_id=current_user.id
             @history.status_from = 1
             @history.status_to = 0
             @history.changed_by_id= current_user.id
