@@ -2,6 +2,7 @@ class Api::DepartmentsController < ApplicationController
   before_action :set_department, only: [:show, :update, :destroy]
   wrap_parameters format: [:json]
 
+
   # GET /departments
   def index
     @departments = Department.all
@@ -47,6 +48,6 @@ class Api::DepartmentsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def department_params
-      params.require(:department)
+      params.require(:department).permit(:name, :head_id, :depId,:deptId)
     end
 end
