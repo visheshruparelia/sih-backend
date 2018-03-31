@@ -156,7 +156,19 @@ class Api::AllfilesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def allfile_params
-      params.require(:allfile)
+      params.require(:allfile).permit!
+
       # params.require(:allfile).permit(:name, :qrcode, :timeRecievedCurrentOwner, :status, :customData, :history, :created_by_id, :currentOwner_id)
     end
+
+    def permit!
+      each_pair do |key, value|
+        convert_hashes_to_parameters(key, value)
+        self[key].permit! if self[key].respond_to? :permit!
+      end
+
+      @permitted = true
+      self
+  end
+
 end
