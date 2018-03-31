@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180331021505) do
+ActiveRecord::Schema.define(version: 20180331030737) do
 
   create_table "allfiles", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -124,9 +124,13 @@ ActiveRecord::Schema.define(version: 20180331021505) do
     t.string "image"
     t.string "email"
     t.text "tokens"
+    t.integer "dept_id"
+    t.integer "sec_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["dept_id"], name: "index_users_on_dept_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["sec_id"], name: "index_users_on_sec_id"
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 

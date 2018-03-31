@@ -39,12 +39,16 @@ class Api::UserController < ApplicationController
     @email=params[:email]
     @name=params[:name]
     @password=params[:password]
+    @sectionId = params[:sectionId]
+    @departmentId = params[:departmentId]
     @password_confirmation=params[:password_confirmation]
     a=User.new
     a.email=@email
     a.name=@name
     a.password=@password
     a.password_confirmation=@password_confirmation
+    a.sec_id = @sectionId
+    a.dept_id = @departmentId 
     a.save
 
     render json: a, status: 201
