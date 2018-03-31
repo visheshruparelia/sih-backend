@@ -47,7 +47,7 @@ class Api::GroupusersController < ApplicationController
     @rows=GroupUser.where(group_id: request_id)
     @users=[]
     for row in @rows
-      @users.push(row.user_id)
+      @users.push(User.find(row.user_id))
     end
     render json: @users
   end
