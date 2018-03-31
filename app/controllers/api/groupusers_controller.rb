@@ -6,7 +6,7 @@ class Api::GroupusersController < ApplicationController
     @groups=GroupUser.all
     render json: @groups, status: 200
   end
-  
+
   def create
     @users=params[:users]
     @notAdded=[]
@@ -47,15 +47,13 @@ class Api::GroupusersController < ApplicationController
 
   def show
     request_id=params[:id].to_i
-    if User.checkAuthority(request_id,current_user.id)
-      @rows=GroupUser.where(group_id: request_id)
-      @users=[]
-      @rows.each do |row|
-        @users.push(row.user_id)
-      end
-      render json: @users
-    else
-      render json: {"error":"Not allowed"}, status:403
+
+    @rows=GroupUser.where(group_id: request_id)
+    @users=[]
+    @rows.each do |row|
+      @users.push(row.user_id)
     end
+    render json: @users
+
   end
 end
