@@ -9,9 +9,9 @@ class Api::AllfilesController < ApplicationController
     for file in @files
       @file=JSON.parse(file.to_json)
       @currentOwner=User.find(file.currentOwner_id)
-      @group_id_id=Group.find(file.group_id_id)
-      @file["currentOwner"]={name: @currentOwner.name , id: @currentOwner.id}
-      @file["currentSection"]={name: @group_id_id.name , id: @group_id_id.id}
+      # @group_id_id=Group.find(file.group_id_id)
+      # @file["currentOwner"]={name: @currentOwner.name , id: @currentOwner.id}
+      # @file[/"currentSection"]={name: @group_id_id.name , id: @group_id_id.id}
       @allfiles.push(@file)
     end
     render json: @allfiles
@@ -23,8 +23,8 @@ class Api::AllfilesController < ApplicationController
     @file=JSON.parse(@allfile.to_json)
     @currentOwner=User.find(@allfile.currentOwner_id)
     @group_id_id=Group.find(@allfile.group_id_id)
-    @file["currentOwner"]={name: @currentOwner.name , id: @currentOwner.id}
-    @file["currentSection"]={name: @group_id_id.name , id: @group_id_id.id}
+    # @file["currentSection"]={name: @group_id_id.name , id: @group_id_id.id}
+    # @file["currentOwner"]={name: @currentOwner.name , id: @currentOwner.id}
     render json: @file
   end
 
