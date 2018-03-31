@@ -22,7 +22,7 @@ class Api::AllfilesController < ApplicationController
 
     @file=JSON.parse(@allfile.to_json)
     @currentOwner=User.find(@allfile.currentOwner_id)
-    @group_id_id=Section.find(@allfile.group_id_id)
+    @group_id_id=Group.find(@allfile.group_id_id)
     @file["currentOwner"]={name: @currentOwner.name , id: @currentOwner.id}
     @file["currentSection"]={name: @group_id_id.name , id: @group_id_id.id}
     render json: @file
