@@ -58,7 +58,7 @@ class Api::AllfilesController < ApplicationController
           @temp=History.where(file_id: @allfile.id, status_from:0, status_to:1)
           n=@temp.size
           if !@temp[n-1].nextNode.nil?
-            @allfile.status=1
+            @allfile.status=0
             @history = History.new()
             @history.file_id = @allfile.id
             @history.change_time = Time.now
@@ -67,7 +67,9 @@ class Api::AllfilesController < ApplicationController
             @history.changed_by_id= current_user.id
             @history.nextNode=params[:nextNode]
             @history.save
+            @allfile.save
           else
+            @allfile.status=0
             @history = History.new()
             @history.file_id = @allfile.id
             @history.change_time = Time.now
@@ -76,8 +78,8 @@ class Api::AllfilesController < ApplicationController
             @history.changed_by_id= current_user.id
             @history.nextNode=params[:nextNode]
             @history.save
+            @allfile.save
           end
-        @allfile.save
         render json: @allfile, status:200
       else
         render json: {"error":"File hasn't been transferred to you"}, status: 403
@@ -97,6 +99,7 @@ class Api::AllfilesController < ApplicationController
         @history.save
         @allfile.group_id_id=params[:sectionId]
         @allfile.dept_id=params[:deptId]
+        @allfile.save
       else
         @history = History.new()
         @history.file_id = @allfile.id
@@ -108,8 +111,8 @@ class Api::AllfilesController < ApplicationController
         @history.save
         @allfile.group_id_id= params[:sectionId]
         @allfile.dept_id= params[:deptId]
+        @allfile.save
       end
-      @allfile.save
 
       render json: @allfile
     end
