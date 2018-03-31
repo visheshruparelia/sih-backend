@@ -19,6 +19,7 @@ class Api::GroupusersController < ApplicationController
         @usergroup.user_id = user
         @usergroup.defaultIncoming = params[:defaultIncoming]
         @usergroup.save
+        print @usergroup
         @added.push(user)
       else
         @notAdded.push(user)
@@ -46,14 +47,12 @@ class Api::GroupusersController < ApplicationController
   end
 
   def show
-    request_id=params[:id].to_i
-
+    request_id=params[:id]
     @rows=GroupUser.where(group_id: request_id)
     @users=[]
-    @rows.each do |row|
+    for row in @rows
       @users.push(row.user_id)
     end
     render json: @users
-
   end
 end
