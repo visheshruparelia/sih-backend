@@ -34,6 +34,7 @@ class Api::AllfilesController < ApplicationController
       @history = History.new()
       @history.file_id = @allfile.id
       @history.change_time = Time.now
+      @history.status_from= 4
       @history.status_to = 0
       @history.changed_by_id=current_user.id
       @history.save
