@@ -1,5 +1,6 @@
 class Api::DepartmentsController < ApplicationController
   before_action :set_department, only: [:show, :update, :destroy]
+  wrap_parameters format: [:json]
 
   # GET /departments
   def index
