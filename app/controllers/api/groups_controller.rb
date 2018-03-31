@@ -13,7 +13,7 @@ class Api::GroupsController < ApplicationController
     end
     render json: @groups
   end
-  +
+  
   # GET /groups/1
   def show
     render json: @group

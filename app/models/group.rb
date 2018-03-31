@@ -1,4 +1,5 @@
 class Group < ApplicationRecord
+  belongs_to :department, foreign_key: 'dept_id'
   def self.uniqueDepartment(user)
     connGroups=GroupUser.where(user_id: user)
     for group in connGroups

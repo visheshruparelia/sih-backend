@@ -34,10 +34,12 @@ class Api::AllfilesController < ApplicationController
     @allfile = Allfile.new()
     @allfile.created_by_id=current_user.id
     @allfile.currentOwner_id=current_user.id
+    @allfile.registeredBy=params[:registeredBy]
     @allfile.name=params[:name]
     @allfile.fileId=params[:fileId]
     @allfile.timeRecievedCurrentOwner=Time.now
     @allfile.customData=params[:customData]
+    @allfile.group_id_id=GroupUser.where(user_id: current_user.id).first.group_id
     if !params[:priority].nil?
       @allfile.priority=params[:priority]
     end
@@ -68,21 +70,29 @@ class Api::AllfilesController < ApplicationController
   # PATCH/PUT /allfiles/1
   def update
     if params[:mode].eql?"receive"
-      if current_user.id==@allfile.currentOwner_id
-        @allfile.history.push(current_user.id)
-        @allfile.status=0
-        @allfile.currentOwner_id=current_user.id
-        @allfile.timeRecievedCurrentOwner=Time.now
-        @allfile.updated_at=Time.now
-        @allfile.save
-
-        @history = History.new()
-        @history.file_id = @allfile.id
-        @history.change_time = Time.now
-        @history.status_from = 1
-        @history.status_to = 0
-        @history.changed_by_id= current_user.id
-        @history.save
+        if GroupUser.exists?(group_id: @allfile.group_id_id, user_id: current_user.id)
+          @temp=History.where(file_id: @allfile.id, status_from:0, status_to:1)
+          n=@temp.size
+          if !@temp[n-1].nextNode.nil?
+            @allfile.status=1
+            @history = History.new()
+            @history.file_id = @allfile.id
+            @history.change_time = Time.now
+            @history.status_from = 1
+            @history.status_to = 0
+            @history.changed_by_id= current_user.id
+            @history.nextNode=params[:nextNode]
+            @history.save
+          else
+            @history = History.new()
+            @history.file_id = @allfile.id
+            @history.change_time = Time.now
+            @history.status_from = 1
+            @history.status_to = 0
+            @history.changed_by_id= current_user.id
+            @history.nextNode=params[:nextNode]
+            @history.save
+          end
 
         render json: @allfile, status:200
       else
@@ -92,31 +102,37 @@ class Api::AllfilesController < ApplicationController
     if params[:mode].eql?"transfer"
       @allfile.status=1
       @allfile.updated_at=Time.now
-      if !params[:user_id].nil?
-          @allfile.currentOwner_id = params[:user_id]
-      elsif !params[:group_id].nil? and !GroupUser.getDefaultincoming(params[:group_id]).nil?
-          @allfile.currentOwner_id = GroupUser.getDefaultincoming(params[:group_id])
-      elsif GroupUser.getDefaultincoming(params[:group_id]).nil?
-          render json: {"error":"No defaultIncoming node"}, status:404
+      if !params[:nextNode].nil?
+        @history = History.new()
+        @history.file_id = @allfile.id
+        @history.change_time = Time.now
+        @history.status_from = 0
+        @history.status_to = 1
+        @history.changed_by_id= current_user.id
+        @history.nextNode=params[:nextNode]
+        @history.save
+        @allfile.group_id_id=params[:sectionId]
+        @allfile.dept_id=params[:deptId]
       else
-          render json: {"error":"Specify the User/group_id"}, status:404
+        @history = History.new()
+        @history.file_id = @allfile.id
+        @history.change_time = Time.now
+        @history.status_from = 0
+        @history.status_to = 1
+        @history.changed_by_id= current_user.id
+        @history.nextNode=nil
+        @history.save
+        @allfile.group_id_id= params[:sectionId]
+        @allfile.dept_id= params[:deptId]
       end
       @allfile.save
 
-
-      @history = History.new()
-      @history.file_id = @allfile.id
-      @history.change_time = Time.now
-      @history.status_from = 0
-      @history.status_to = 1
-      @history.changed_by_id= current_user.id
-      @history.save
       render json: @allfile
     end
     if params[:mode].eql?"update" #check modify/view access
 
       @currstatus=@allfile.status
-      if @allfile.update(fileId: params[:fileId],name: params[:name],status: params[:status],customData: params[:customData],priority: params[:priority])
+      if @allfile.update(allfile_params)
           if @currstatus!=params[:status]
               @history = History.new()
               @history.file_id = @allfile.id

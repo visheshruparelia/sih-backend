@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180330203726) do
+ActiveRecord::Schema.define(version: 20180331011129) do
 
   create_table "allfiles", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -24,8 +24,13 @@ ActiveRecord::Schema.define(version: 20180330203726) do
     t.integer "currentOwner_id"
     t.integer "priority", default: 0
     t.integer "fileId", default: 0, null: false
+    t.string "registeredBy"
+    t.integer "group_id_id"
+    t.integer "dept_id"
     t.index ["created_by_id"], name: "index_allfiles_on_created_by_id"
     t.index ["currentOwner_id"], name: "index_allfiles_on_currentOwner_id"
+    t.index ["dept_id"], name: "index_allfiles_on_dept_id"
+    t.index ["group_id_id"], name: "index_allfiles_on_group_id_id"
   end
 
   create_table "departments", force: :cascade do |t|
@@ -66,6 +71,8 @@ ActiveRecord::Schema.define(version: 20180330203726) do
     t.datetime "updated_at", null: false
     t.string "name"
     t.boolean "isDepartment", default: false
+    t.integer "dept_id"
+    t.index ["dept_id"], name: "index_groups_on_dept_id"
   end
 
   create_table "histories", force: :cascade do |t|
@@ -76,6 +83,7 @@ ActiveRecord::Schema.define(version: 20180330203726) do
     t.datetime "change_time"
     t.integer "status_from"
     t.integer "status_to"
+    t.string "nextNode"
     t.index ["changed_by_id"], name: "index_histories_on_changed_by_id"
     t.index ["file_id"], name: "index_histories_on_file_id"
   end
